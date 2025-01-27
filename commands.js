@@ -6,7 +6,7 @@ const logger = require('./logging');
 function play(client, message) {
   //If we receive !play make sure we have a bot initialized
   if(!client.botMap.has(message.guild.id)) {
-    client.botMap.set(message.guild.id, new botModel())
+    client.botMap.set(message.guild.id, new botModel(client));
     logger.info("Created new instance for Guild " + message.guild.name)
   }
   try{
@@ -86,7 +86,7 @@ function clearQueue(client, message) {
 
 function leave(client, message) {
   if(client.botMap.has(message.guild.id)) {
-    client.botMap.get(message.guild.id).leaveMusic()
+    client.botMap.get(message.guild.id).leaveMusic(client)
   }
 }
 

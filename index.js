@@ -1,21 +1,27 @@
+// Setup the logger
 const logger = require('./logging');
+
+// Setup reading from the environment
 const dotenv = require('dotenv');
 dotenv.config();
+
+// Fetch bot token from environment
 const token = process.env.BOT_TOKEN
 
+// Setup bot permissions
 const { Client, GatewayIntentBits, Events} = require('discord.js');
-
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.MessageContent] });
 
 // Give map for playlists in client
 client.botMap = new Map();
 
-// Give command info to the client variable and initialize slash commands
+// Give commands list to the client and initialize slash commands
 const commandRegister = require("./commandRegister");
 commandRegister().then(result => {
     client.commands = result
 })
 
+// Initialize the "!" commands
 const command_list = require('./commands')
 const command_list_lowercase = {}
 Object.keys(command_list).forEach((key) => {
@@ -38,7 +44,7 @@ client.on(Events.VoiceStateUpdate, (oldState, newState) => {
     if(oldState.channelId && !newState.channelId){
         // Bot was disconnected?
         if(client.botMap.has(newState.guild.id)) {
-            client.botMap.get(newState.guild.id).leaveMusic()
+            client.botMap.get(newState.guild.id).leaveMusic(client)
         }
 
         if(newState.id === client.user.id) return logger.debug(`${client.user.username} was disconnected from "${newState.guild.name}" server!`);

@@ -10,22 +10,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/builders": "^0.9.0",
-    "@discordjs/rest": "^0.1.0-canary.0",
-    "@discordjs/voice": "^0.7.5",
-    "discord.js": "^14.8.0",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.2",
-    "ffmpeg": "^0.0.4",
-    "ffmpeg-static": "^4.4.0",
-    "fluent-ffmpeg": "^2.1.2",
-    "libsodium-wrappers": "^0.7.13",
-    "play-audio": "^0.5.2",
-    "winston": "^3.8.2",
-    "youtube-search-api": "^1.0.11"
+    "@discord-player/extractor": "^7.1.0",
+    "discord-player": "^7.1.0",
+    "discord-player-youtubei": "^1.4.2",
+    "discord.js": "^14.17.3",
+    "dotenv": "^16.4.7",
+    "ffmpeg-static": "^5.2.0",
+    "winston": "^3.17.0",
+    "youtube-search-api": "^1.2.2",
+    "youtubei.js": "^13.0.0"
   },
   "devDependencies": {
-    "discord-api-types": "^0.25.2",
+    "discord-api-types": "^0.37.118",
     "ytdl-core": "^4.9.2"
   },
   "nodeVersion": "21.6.2"

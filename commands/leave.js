@@ -9,7 +9,7 @@ module.exports = {
         interaction.reply({ content: 'Leaving the voice channel..'}); 
         
         if(client.botMap.has(interaction.channel.guild.id)) {
-            client.botMap.get(interaction.channel.guild.id).leaveMusic()
+            client.botMap.get(interaction.channel.guild.id).leaveMusic(client)
         }
     },
 };
