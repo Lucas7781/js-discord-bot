@@ -9,8 +9,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "type": "commonjs",
   "dependencies": {
     "@discord-player/extractor": "^7.1.0",
+    "child_process": "^1.0.2",
     "discord-player": "^7.1.0",
     "discord-player-youtubei": "^1.4.2",
     "discord.js": "^14.17.3",
