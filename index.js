@@ -13,7 +13,7 @@ const {Client, GatewayIntentBits, Events} = require('discord.js');
 const client = new Client({intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.MessageContent]});
 
 // Give map for playlists in client
-client.botMap = new Map();
+client.guildList = []
 
 
 // Start player instance
@@ -46,11 +46,6 @@ client.on(Events.VoiceStateUpdate, (oldState, newState) => {
 
     // Disconnection
     if (oldState.channelId && !newState.channelId) {
-        // Bot was disconnected?
-        if (client.botMap.has(newState.guild.id)) {
-            client.botMap.get(newState.guild.id).leaveMusic(client)
-        }
-
         if (newState.id === client.user.id) return logger.debug(`${client.user.username} was disconnected from "${newState.guild.name}" server!`);
     }
 });
@@ -61,7 +56,7 @@ client.on(Events.InteractionCreate, async interaction => {
     const command = client.commands.get(interaction.commandName);
     try {
         const player = useMainPlayer()
-        await player.context.provide({guild: interaction.guild}, () => command.execute(interaction, client));
+        await player.context.provide({guild: interaction.guild}, () => command.execute(interaction));
     } catch (err) {
         logger.error(err);
     }

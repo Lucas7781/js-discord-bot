@@ -1,6 +1,3 @@
-const botModel = require('../botModel');
-const logger = require('../logging');
-
 module.exports = {
     data: {
         name: "clean",
@@ -8,7 +5,7 @@ module.exports = {
 
     async execute(client, message) {
         //Get input and check if it is a number and parse it
-        let [first, ...rest] = message.content.split(' ')
+        let [, ...rest] = message.content.split(' ')
         rest = rest.join(' ')
         if (isNaN(rest)) {
             message.channel.send("Your input is not a number!")

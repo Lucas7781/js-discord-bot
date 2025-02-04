@@ -1,16 +1,13 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const sleepFunc = require('./sleep_function/sleepFunc');
+const {clear_queue} = require("../music_logic/clearqueue");
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('clearqueue')
         .setDescription('Make the bot clear the entire queue'),
-    async execute(interaction, client) {
+    async execute(interaction) {
         //Indicate that the command is being processed
         interaction.reply({ content: 'Clearing the queue for you..'});
-
-        if(client.botMap.has(interaction.guild.id)) {
-            client.botMap.get(interaction.guild.id).musicBot.clearQueue()
-        }
+        await clear_queue(interaction.channel)
     },
 };

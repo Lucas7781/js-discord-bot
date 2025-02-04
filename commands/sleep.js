@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const sleepFunc = require('./sleep_function/sleepFunc');
+const {error} = require("../logging");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,8 +17,8 @@ module.exports = {
             await interaction.reply({ content: 'ZzZzZzZ...', ephemeral: true }); // indicate that the command is being processed
             sleepFunc(seconds).then(() => { interaction.deleteReply() })
             // no need to send any response back to the user
-        } catch (error) {
-            logger.error(error);
+        } catch (e) {
+            error(e);
         }
     },
 };

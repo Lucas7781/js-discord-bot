@@ -1,6 +1,3 @@
-const botModel = require('../botModel');
-const logger = require('../logging');
-
 module.exports = {
     data: {
         name: "bot get him",

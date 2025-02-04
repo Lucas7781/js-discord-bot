@@ -9,7 +9,7 @@ module.exports = {
             .setName('number')
             .setDescription('The number of messages you want to delete')
             .setRequired(true)),
-    async execute(interaction, client) {
+    async execute(interaction) {
         interaction.reply({ content: 'Deleting the messages..', ephemeral: true }); 
         sleepFunc(5).then(() => { interaction.deleteReply() })
         
@@ -18,6 +18,6 @@ module.exports = {
             interaction.reply("Maximum input value is 99")
             return;
         }
-        interaction.channel.bulkDelete(amount + 1)
+        await interaction.channel.bulkDelete(amount + 1)
     },
 };
