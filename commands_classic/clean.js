@@ -5,7 +5,7 @@ module.exports = {
 
     async execute(client, message) {
         //Get input and check if it is a number and parse it
-        let [, ...rest] = message.content.split(' ')
+        let [first, ...rest] = message.content.split(' ')
         rest = rest.join(' ')
         if (isNaN(rest)) {
             message.channel.send("Your input is not a number!")

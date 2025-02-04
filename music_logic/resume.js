@@ -1,6 +1,6 @@
 const {useTimeline} = require("discord-player");
 
-async function pause(messageChannel) {
+async function resume(messageChannel) {
     // Get the queue's timeline
     const timeline = useTimeline();
 
@@ -28,5 +28,5 @@ async function pause(messageChannel) {
 }
 
 module.exports = {
-    pause
+    resume
 }
