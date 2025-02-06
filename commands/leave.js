@@ -6,8 +6,6 @@ module.exports = {
         .setName('leave')
         .setDescription('Make the bot leave from the voice channel'),
     async execute(interaction) {
-        //Indicate that the command is being processed
-        interaction.reply({ content: 'Leaving the voice channel..'}); 
-        await leave(interaction.channel);
+        await leave(interaction.channel, interaction)
     },
 };

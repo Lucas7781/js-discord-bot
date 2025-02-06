@@ -6,8 +6,6 @@ module.exports = {
         .setName('clearqueue')
         .setDescription('Make the bot clear the entire queue'),
     async execute(interaction) {
-        //Indicate that the command is being processed
-        interaction.reply({ content: 'Clearing the queue for you..'});
-        await clear_queue(interaction.channel)
+        await clear_queue(interaction.channel, interaction)
     },
 };

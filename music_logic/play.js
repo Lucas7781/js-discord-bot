@@ -1,18 +1,20 @@
 const {useMainPlayer} = require("discord-player");
+const {logger} = require("../logging");
 
-async function play(messageChannel, voiceChannel, input) {
+async function play(input, voiceChannel, messageChannel, interaction) {
     const player = useMainPlayer()
     try {
         await player.play(voiceChannel, input, {
             nodeOptions: {
                 metadata: {
                     messageChannel: messageChannel,
-                    voiceChannel: voiceChannel
+                    voiceChannel: voiceChannel,
+                    interaction: interaction
                 },
             },
         });
     } catch (e) {
-        console.error('Error playing song:', e);
+        await logger.error("An error occurred while trying to play the song: " + e);
         throw e;
     }
 }

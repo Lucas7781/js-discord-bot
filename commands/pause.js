@@ -6,7 +6,6 @@ module.exports = {
         .setName('pause')
         .setDescription('Make the bot pause the current song'),
     async execute(interaction) {
-        //Indicate that the command is being processed
-        await pause(interaction.channel);
+        await pause(interaction.channel, interaction)
     },
 };

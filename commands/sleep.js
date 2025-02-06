@@ -13,7 +13,6 @@ module.exports = {
     async execute(interaction) {
         try {
             const seconds = interaction.options.getInteger("seconds")
-            // do something here
             await interaction.reply({ content: 'ZzZzZzZ...', ephemeral: true }); // indicate that the command is being processed
             sleepFunc(seconds).then(() => { interaction.deleteReply() })
             // no need to send any response back to the user

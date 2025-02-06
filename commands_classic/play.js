@@ -1,5 +1,6 @@
 const logger = require('../logging');
 const {play} = require("../music_logic/play");
+const {botReply} = require("../bot-reply");
 
 module.exports = {
     data: {
@@ -11,7 +12,7 @@ module.exports = {
             let input = message.content.split(' ');
             input.shift();
             input = input.join(' ')
-            play(message.channel, message.member.voice.channel, input).catch(err => logger.error(err))
+            play(input, message.member.voice.channel, message.channel).catch(err => logger.error(err))
         } catch (err) {
             logger.error(err)
         }

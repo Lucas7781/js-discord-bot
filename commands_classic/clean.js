@@ -1,3 +1,4 @@
+const {botReply} = require("../bot-reply");
 module.exports = {
     data: {
         name: "clean",
@@ -8,13 +9,13 @@ module.exports = {
         let [first, ...rest] = message.content.split(' ')
         rest = rest.join(' ')
         if (isNaN(rest)) {
-            message.channel.send("Your input is not a number!")
+            await botReply("Your input is not a number!", message.channel)
             return
         }
         const amount = parseInt(rest, 10)
 
         if (amount >= 100) {
-            message.reply("Maximum input value is 99")
+            await botReply("Maximum input value is 99", message.channel)
             return;
         }
         await message.channel.bulkDelete(amount + 1)

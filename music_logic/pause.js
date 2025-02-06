@@ -1,6 +1,6 @@
 const {useTimeline} = require("discord-player");
 
-async function pause(messageChannel) {
+async function pause(messageChannel, interaction) {
     // Get the queue's timeline
     const timeline = useTimeline();
 
@@ -16,7 +16,7 @@ async function pause(messageChannel) {
     wasPaused ? timeline.resume() : timeline.pause();
 
     // If the timeline was previously paused, the queue is now back to playing
-    return messageChannel.send(
+    messageChannel.send(
         `The player is now ${wasPaused ? 'playing' : 'paused'}.`,
     );
 }

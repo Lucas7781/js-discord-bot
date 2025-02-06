@@ -15,13 +15,10 @@ module.exports = {
 
     async execute(interaction) {
         //Indicate that the command is being processed
-        interaction.reply({ content: 'Loading the song(s) for you..', ephemeral: true }); 
-        sleepFunc(5).then(() => { interaction.deleteReply() })
-
         try {
             const input = interaction.options.get("song").value
             const voiceChannel = interaction.member.voice.channel
-            play(interaction.channel, voiceChannel, input).catch(err =>{
+            play(input, voiceChannel, interaction.channel, interaction).catch(err =>{
                 logger.error(err)
             })
         } catch (err) {

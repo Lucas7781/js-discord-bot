@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const sleepFunc = require('./sleep_function/sleepFunc');
+const {botReply} = require("../bot-reply");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -10,14 +11,14 @@ module.exports = {
             .setDescription('The number of messages you want to delete')
             .setRequired(true)),
     async execute(interaction) {
-        interaction.reply({ content: 'Deleting the messages..', ephemeral: true }); 
         sleepFunc(5).then(() => { interaction.deleteReply() })
         
         const amount = interaction.options.getInteger("number")
         if(amount >= 100) {
-            interaction.reply("Maximum input value is 99")
+            await botReply("Maximum input value is 99", interaction.channel, interaction)
             return;
         }
         await interaction.channel.bulkDelete(amount + 1)
+        await botReply(`Successfully deleted ${amount} messages`, interaction.channel, interaction)
     },
 };

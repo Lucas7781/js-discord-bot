@@ -22,9 +22,6 @@ async function resume(messageChannel) {
     return messageChannel.send(
         `The player is now playing.`,
     );
-
-
-
 }
 
 module.exports = {

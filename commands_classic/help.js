@@ -1,9 +1,23 @@
+const {botReply} = require("../bot-reply");
 module.exports = {
     data: {
         name: "help",
     },
 
     async execute(client, message) {
-        message.channel.send("you fell off + ratio + who asked + no u + deez nuts + radio + don't care + didn't ask +" + " caught in 4k + cope + seethe + GG + your mom's + the hood watches markiplier now + grow up + L +" + " L (part 2) + retweet + ligma + taco bell tortilla crunch + think outside the bun + ur benched + " + "ur a wrench + i own you + ur dad fell off + my dad could beat ur dad up + silver elite + tryhard +" + " boomer + ur beta + L (part 3) + ur sus + quote tweet + you're cringe + i did your mom +" + " you bought monkey nft + you're weirdchamp + you're a clown + my dad owns steam")
+        const text = "Here is a list with all the commands available for slash or ! commands:\n" +
+            "\tplay <song/playlist> - Plays a song or playlist. If there are songs in the queue, the song will be added at the end of the queue \n" +
+            "\tpause - Pauses the current song \n" +
+            "\tresume - Resumes a paused song \n" +
+            "\tskip - Skips the current song. If a song is looping, the loop will also stop \n" +
+            "\tseek <seconds> - Skips to the timestamp within the song \n" +
+            "\tqueue - Displays a list with the queued songs \n" +
+            "\tdequeue <number> - Removes given song from the queue \n" +
+            "\tclearQueue - removes all songs from the queue \n" +
+            "\tloop - Current song will be looped \n" +
+            "\tstopLoop - Stops looping current song after it ends \n" +
+            "\tleave - Disconnects the bot from the channel. Note: it will also delete the queue \n" +
+            "\tclean <number> - Deletes the given number of messages from the text channel \n"
+        await botReply(text, message.channel)
     },
 };
