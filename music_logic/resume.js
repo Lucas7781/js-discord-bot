@@ -1,27 +1,23 @@
 const {useTimeline} = require("discord-player");
+const {botReply} = require("../bot-reply");
 
-async function resume(messageChannel) {
+async function resume(messageChannel, interaction) {
     // Get the queue's timeline
     const timeline = useTimeline();
 
     if (!timeline) {
-        return messageChannel.send(
-            'This server does not have an active player session.',
-        );
+        await botReply("This server does not have an active player session.", messageChannel, interaction);
+        return
     }
 
     // Invert the pause state
     const wasPaused = timeline.paused;
-    if (!wasPaused) {
-        return messageChannel.send(
-            `The bot was already playing.`,
-        )
-    }
-    timeline.resume()
+
+    wasPaused ? timeline.resume() : timeline.pause();
+    const reply_text = wasPaused ? `The player is now resumed.`: `The player was already playing dumbass :goblin:`
+
     // If the timeline was previously paused, the queue is now back to playing
-    return messageChannel.send(
-        `The player is now playing.`,
-    );
+    await botReply(reply_text, messageChannel, interaction)
 }
 
 module.exports = {

@@ -1,10 +1,11 @@
 const {useQueue} = require("discord-player");
+const {botReply} = require("../bot-reply");
 
-async function leave(messageChannel) {
+async function leave(messageChannel, interaction) {
     // Get the current queue
     const queue = useQueue();
     queue.delete()
-    messageChannel.send("Remove bot from the voice channel.")
+    await botReply("Fine I'll leave :crying_cat_face:", messageChannel, interaction)
 }
 
 module.exports = {

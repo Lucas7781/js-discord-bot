@@ -1,10 +1,11 @@
 const {useQueue} = require("discord-player");
+const {botReply} = require("../bot-reply");
 
-async function clear_queue(messageChannel) {
+async function clear_queue(messageChannel, interaction) {
     // Get the current queue
     const queue = useQueue();
     queue.clear()
-    messageChannel.send("Cleared music queue.");
+    await botReply("Queue cleared.", messageChannel, interaction)
 }
 
 module.exports = {

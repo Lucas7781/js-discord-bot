@@ -1,5 +1,5 @@
 const logger = require('../logging');
-const {clear_queue} = require("../music_logic/clearqueue");
+const {clearQueue} = require("../music_logic/clearqueue");
 
 module.exports = {
     data: {
@@ -8,7 +8,7 @@ module.exports = {
 
     async execute(client, message) {
         try {
-            clear_queue(message.channel).catch(err => logger.error(err))
+            clearQueue(message.channel).catch(err => logger.error(err))
         } catch (err) {
             logger.error(err)
         }
