@@ -15,6 +15,7 @@ async function loop(loopMode, messageChannel, interaction) {
         await botReply(
             'This server does not have an active player session.', messageChannel, interaction
         );
+        return;
     }
 
     // Set the loop mode

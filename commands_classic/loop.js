@@ -20,7 +20,7 @@ module.exports = {
             input.shift();
             input = input.join(' ').toLowerCase()
             const loop_option = loop_options[input]
-            if (!loop_option) {
+            if (loop_option === undefined) {
                 return botReply(`Invalid loop mode. Options are: off, track, queue, autoplay`, message.channel)
             }
 

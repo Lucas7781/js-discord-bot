@@ -2,15 +2,27 @@ const {YoutubeiExtractor} = require("discord-player-youtubei")
 const {Player} = require("discord-player");
 const {EmbedBuilder} = require("discord.js");
 const {botMessage, botReply} = require("./bot-reply");
+const {SpotifyExtractor} = require("@discord-player/extractor");
+const {generateSongList, getSongListDuration} = require("./utilities/songListOperations");
 
 async function startPlayer(client) {
-    const player = new Player(client)
+    const player = new Player(client);
 
-    await player.extractors.register(YoutubeiExtractor, {})
-    await player.extractors.loadMulti([YoutubeiExtractor]);
+    await player.extractors.register(YoutubeiExtractor, {});
+    await player.extractors.register(SpotifyExtractor, {});
+    await player.extractors.loadMulti([
+        YoutubeiExtractor,
+        SpotifyExtractor
+    ]);
 
+    await addPlayerStartListener(player);
+    await addAddTrackListener(player);
+    await addAddTracksListeners(player);
+}
+
+async function addPlayerStartListener(player) {
     player.events.on('playerStart', (queue, track) => {
-        const description = queue.isEmpty() ? 'Queue is empty' : 'Next song in queue is ' + queue.tracks[0].title;
+        const description = queue.isEmpty() ? 'Queue is empty' : 'Next song in queue is ' + queue.tracks.at(0).title;
         const Embed = new EmbedBuilder()
             .setColor('#0099ff')
             .setTitle(track.title)
@@ -23,7 +35,9 @@ async function startPlayer(client) {
 
         botMessage({embeds: [Embed]}, queue.metadata.messageChannel, queue.metadata.interaction)
     });
+}
 
+async function addAddTrackListener(player) {
     player.events.on('audioTrackAdd', (queue, track) => {
         const Embed = new EmbedBuilder()
             .setColor('#0099ff')
@@ -39,37 +53,22 @@ async function startPlayer(client) {
 
         botReply({embeds: [Embed]}, queue.metadata.messageChannel, queue.metadata.interaction)
     });
+}
 
-    player.events.on('audioTracksAdd', (queue, track) => {
-        // Format song list with index numbers
-        let songs = track.map((song, index) => `${index + 1}. [${song.title}](${song.url})`).join('\n');
-
-        // Calculate total duration in seconds
-        let duration = track.reduce((total, song) =>
-            total + song.duration.split(':').reduce((acc, time) => (60 * acc) + +time), 0
-        );
-
-        // Format duration dynamically (hh:mm:ss if > 1 hour, otherwise mm:ss)
-        let hours = Math.floor(duration / 3600);
-        let minutes = Math.floor((duration % 3600) / 60);
-        let seconds = duration % 60;
-        let final_duration = hours > 0
-            ? `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-            : `${minutes}:${seconds.toString().padStart(2, '0')}`;
-
+async function addAddTracksListeners(player) {
+    player.events.on('audioTracksAdd', (queue, tracks) => {
+        // Embed message
         const Embed = new EmbedBuilder()
             .setColor('#0099ff')
-            .setTitle(`Queued ${track.length} songs`)
+            .setTitle(`Queued ${tracks.length} songs`)
             .addFields(
-                { name: 'Songs', value: songs || 'No songs found' },
-                { name: 'Total duration', value: final_duration }
+                { name: 'Songs', value: generateSongList(tracks) },
+                { name: 'Total duration', value: getSongListDuration(tracks) }
             )
             .setTimestamp();
 
         botReply({ embeds: [Embed] }, queue.metadata.messageChannel, queue.metadata.interaction);
     });
-
-
 }
 
 module.exports = {
