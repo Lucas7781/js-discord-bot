@@ -1,7 +1,6 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const sleepFunc = require('./sleep_function/sleepFunc');
-const logger = require('../logging');
+const {SlashCommandBuilder} = require('@discordjs/builders');
 const {play} = require("../music_logic/play");
+const logger = require('../logging');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -15,15 +14,9 @@ module.exports = {
 
     async execute(interaction) {
         //Indicate that the command is being processed
-        try {
-            const input = interaction.options.get("song").value
-            const voiceChannel = interaction.member.voice.channel
-            play(input, voiceChannel, interaction.channel, interaction).catch(err =>{
-                logger.error(err)
-            })
-        } catch (err) {
-            logger.error(err)
-        }
-
+        const input = interaction.options.get("song").value
+        logger.debug(`[${interaction.guild.name}][Play] Play input: ${input}`)
+        const voiceChannel = interaction.member.voice.channel
+        await play(input, voiceChannel, interaction.channel, interaction)
     },
 };

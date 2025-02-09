@@ -1,4 +1,3 @@
-const logger = require('../logging');
 const {queue} = require("../music_logic/queue");
 
 module.exports = {
@@ -7,10 +6,6 @@ module.exports = {
     },
 
     async execute(client, message) {
-        try {
-            queue(message.channel).catch(err => logger.error(err))
-        } catch (err) {
-            logger.error(err)
-        }
+        await queue(message.channel)
     },
 };

@@ -1,6 +1,6 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const sleepFunc = require('./sleep_function/sleepFunc');
+const {SlashCommandBuilder} = require('@discordjs/builders');
 const {botReply} = require("../bot-reply");
+const logger = require("../logging");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -9,12 +9,10 @@ module.exports = {
         .addStringOption((option) => option
             .setName('number')
             .setDescription('The number of messages you want to delete')
-            .setRequired(true)),
-    async execute(interaction) {
-        sleepFunc(5).then(() => { interaction.deleteReply() })
-        
+            .setRequired(true)), async execute(interaction) {
         const amount = interaction.options.getInteger("number")
-        if(amount >= 100) {
+        logger.debug(`[${interaction.guild.name}][Clean] Clean input: ${amount}`)
+        if (amount >= 100) {
             await botReply("Maximum input value is 99", interaction.channel, interaction)
             return;
         }

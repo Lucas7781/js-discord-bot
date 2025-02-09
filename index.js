@@ -18,19 +18,37 @@ client.guildList = []
 
 // Start player instance
 const {startPlayer} = require("./setupPlayer");
-startPlayer(client);
+try {
+    startPlayer(client).then(() => {
+        logger.info("[Player] Player initialized successfully!")
+    });
+} catch (err) {
+    logger.error(`[Player] ${err}`);
+}
 
 
 // Give commands list to the client and initialize slash commands
-const commandRegister = require("./commandRegister");
-commandRegister().then(result => {
-    client.commands = result
-})
+const { registerCommands } = require("./commandRegister");
+try{
+    registerCommands().then(result => {
+        client.commands = result
+        logger.info("[Slash Commands Registration] Slash commands registered successfully!")
+    })
+}
+catch (err) {
+    logger.error(`[Slash Commands Registration] ${err}`)
+}
 
 // Initialize the "!" commands
 const commandClassicRegister = require('./commandClassicRegister')
 const {useMainPlayer} = require("discord-player");
-client.commandsClassic = commandClassicRegister()
+try{
+    client.commandsClassic = commandClassicRegister()
+    logger.info("[Classic Commands Registration] Classic commands registered successfully!")
+}
+catch (err) {
+    logger.error(`[Classic Commands Registration] ${err}`)
+}
 
 
 // Main logic for detecting changes in voice channel
@@ -39,33 +57,34 @@ client.on(Events.VoiceStateUpdate, (oldState, newState) => {
     if (newState.member.user.id !== process.env.CLIENT_ID) return
 
     // Represents a mute/deafen update
-    if (oldState.channelId === newState.channelId) return logger.debug('Mute/Deafen Update');
+    if (oldState.channelId === newState.channelId) return logger.debug(`[${newState.guild.name}] Mute/Deafen Update`);
 
     // Some connection
-    if (!oldState.channelId && newState.channelId) return logger.debug('Connection Update');
+    if (!oldState.channelId && newState.channelId) return logger.debug(`[${newState.guild.name}] Connection Update`);
 
     // Disconnection
     if (oldState.channelId && !newState.channelId) {
-        if (newState.id === client.user.id) return logger.debug(`${client.user.username} was disconnected from "${newState.guild.name}" server!`);
+        if (newState.id === client.user.id) return logger.debug(`[${newState.guild.name}] Bot has disconnected!`);
     }
 });
 
 // Main interaction logic for slash commands
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isCommand()) return;
+    logger.debug(`[${interaction.guild.name}] Slash command received: ${interaction.commandName}`);
     const command = client.commands.get(interaction.commandName);
     try {
         const player = useMainPlayer()
         await player.context.provide({guild: interaction.guild}, () => command.execute(interaction));
     } catch (err) {
-        logger.error(err);
+        logger.error(`[${interaction.guild.name}][${interaction.commandName}] ${err}`);
     }
 });
 
 // Main interaction logic for ! commands
 client.on(Events.MessageCreate, async message => {
     if (message.content.startsWith("!")) {
-        logger.debug("Command received: " + message.content)
+        logger.debug(`[${message.guild.name}] Simple command received: ${message.content}`)
 
         const command_name = message.content.split("!")[1].split(" ")[0]
         const command = client.commandsClassic.get(command_name);
@@ -73,10 +92,16 @@ client.on(Events.MessageCreate, async message => {
             const player = useMainPlayer()
             await player.context.provide({guild: message.guild}, () => command.execute(client, message));
         } catch (err) {
-            logger.error(err);
+            logger.error(`[${message.guild.name}][${command_name}] ${err}`);
         }
     }
 })
 
-logger.info("Successfully logged in and running!")
-client.login(token);
+try{
+    client.login(token).then(() => {
+        logger.info("[Bot] Successfully logged in and running!")
+    });
+}
+catch (err) {
+    logger.error(`[Bot Login] ${err}`)
+}

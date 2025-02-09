@@ -1,7 +1,6 @@
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
+const {REST} = require('@discordjs/rest');
+const {Routes} = require('discord-api-types/v9');
 const fs = require('fs');
-const logger = require('./logging');
 
 // Initialize env file for BOT TOKEN
 const dotenv = require('dotenv');
@@ -18,28 +17,23 @@ for (const file of commandFiles) {
     commandsRet.set(command.data.name, command);
 }
 
-const rest = new REST({ version: '9' }).setToken(token);
+const rest = new REST({version: '9'}).setToken(token);
+
+async function registerCommands() {
+
+    //Note: uncomment this in if you want to register commands only to a specific server
+    //const guildID = process.env.GUILD_ID
+    const clientID = process.env.CLIENT_ID
+    await rest.put(//This version is for testing, by adding the commands only to a given guild
+        //Routes.applicationGuildCommands(clientID, guildID),
+        Routes.applicationCommands(clientID), {body: commands},);
+    return commandsRet
+}
 
 /**
  * Registers all slash commands to the server
  * @returns {Array} List of slash commands
  */
-module.exports = async function () {
-    try {
-        //Note: uncomment this in if you want to register commands only to a specific server
-        //const guildID = process.env.GUILD_ID
-        const clientID = process.env.CLIENT_ID
-        logger.info('Started refreshing application (/) commands.');
-        await rest.put(
-            //This version is for testing, by adding the commands only to a given guild
-            //Routes.applicationGuildCommands(clientID, guildID),
-            Routes.applicationCommands(clientID),
-            { body: commands },
-        );
-
-        logger.info('Successfully reloaded application (/) commands.');
-    } catch (error) {
-        logger.error(error);
-    }
-    return commandsRet
-};
+module.exports = {
+    registerCommands
+}

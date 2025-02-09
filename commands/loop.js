@@ -1,6 +1,7 @@
 const {SlashCommandBuilder} = require('@discordjs/builders');
 const {QueueRepeatMode} = require("discord-player");
 const {loop} = require("../music_logic/loop");
+const logger = require('../logging');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -18,6 +19,8 @@ module.exports = {
                 ),
             ),
     async execute(interaction) {
+        const input = interaction.options.getNumber('mode')
+        logger.debug(`[${interaction.guild.name}][Loop] Loop input: ${input}`)
         await loop(interaction.options.getNumber('mode'), interaction.channel, interaction)
     },
 };
