@@ -14,7 +14,10 @@ async function startPlayer(client) {
         },
         innertubeConfigRaw: {
             player_id: '0004de42'
-        }
+        },
+        generateWithPoToken: true,
+        //Authentication currently throwing errors every time - disabling for now
+        //useServerAbrStream: true,
     });
     await player.extractors.register(SpotifyExtractor, {});
     await player.extractors.loadMulti([
@@ -25,6 +28,7 @@ async function startPlayer(client) {
     await addPlayerStartListener(player);
     await addAddTrackListener(player);
     await addAddTracksListeners(player);
+    await addErrorListeners(player);
 }
 
 async function addPlayerStartListener(player) {
@@ -75,6 +79,28 @@ async function addAddTracksListeners(player) {
             .setTimestamp();
 
         botReply({ embeds: [Embed] }, queue.metadata.messageChannel, queue.metadata.interaction);
+    });
+}
+
+async function addErrorListeners(player) {
+    player.events.on('playerError', (queue, error) => {
+        const Embed = new EmbedBuilder()
+            .setColor('#ff0000')
+            .setTitle('Player Error')
+            .setDescription(`An error occurred: \`${error.message}\``)
+            .setTimestamp();
+
+        botReply({ embeds: [Embed] }, queue?.metadata?.messageChannel, queue?.metadata?.interaction);
+    });
+
+    player.events.on('error', (queue, error) => {
+        const Embed = new EmbedBuilder()
+            .setColor('#ff0000')
+            .setTitle('General Error')
+            .setDescription(`An error occurred: \`${error.message}\``)
+            .setTimestamp();
+
+        botReply({ embeds: [Embed] }, queue?.metadata?.messageChannel, queue?.metadata?.interaction);
     });
 }
 
