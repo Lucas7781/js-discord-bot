@@ -8,7 +8,14 @@ const {generateSongList, getSongListDuration} = require("./utilities/songListOpe
 async function startPlayer(client) {
     const player = new Player(client);
 
-    await player.extractors.register(YoutubeiExtractor, {});
+    await player.extractors.register(YoutubeiExtractor, {
+        streamOptions: {
+            useClient: "WEB_EMBEDDED",
+        },
+        innertubeConfigRaw: {
+            player_id: '0004de42'
+        }
+    });
     await player.extractors.register(SpotifyExtractor, {});
     await player.extractors.loadMulti([
         YoutubeiExtractor,
