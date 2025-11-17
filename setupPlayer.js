@@ -1,28 +1,23 @@
-const {YoutubeiExtractor} = require("discord-player-youtubei")
 const {Player} = require("discord-player");
 const {EmbedBuilder} = require("discord.js");
 const {botMessage, botReply} = require("./bot-reply");
-const {SpotifyExtractor} = require("@discord-player/extractor");
 const {generateSongList, getSongListDuration} = require("./utilities/songListOperations");
+
+// Initialize env file for BOT TOKEN
+const dotenv = require('dotenv');
+const {YoutubeExtractor} = require("discord-player-youtube");
+dotenv.config();
 
 async function startPlayer(client) {
     const player = new Player(client);
 
-    await player.extractors.register(YoutubeiExtractor, {
-        streamOptions: {
-            useClient: "WEB_EMBEDDED",
-        },
-        innertubeConfigRaw: {
-            player_id: '0004de42'
-        },
-        generateWithPoToken: true,
-        //Authentication currently throwing errors every time - disabling for now
-        //useServerAbrStream: true,
+    await player.extractors.register(YoutubeExtractor, {
+        cookie: process.env.YOUTUBE_COOKIE,
+        filterAutoplayTracks: true, // enabled by default
+        disableYTJSLog: true, // silence youtubei.js logs
     });
-    await player.extractors.register(SpotifyExtractor, {});
     await player.extractors.loadMulti([
-        YoutubeiExtractor,
-        SpotifyExtractor
+        YoutubeExtractor,
     ]);
 
     await addPlayerStartListener(player);
@@ -73,12 +68,12 @@ async function addAddTracksListeners(player) {
             .setColor('#0099ff')
             .setTitle(`Queued ${tracks.length} songs`)
             .addFields(
-                { name: 'Songs', value: generateSongList(tracks) },
-                { name: 'Total duration', value: getSongListDuration(tracks) }
+                {name: 'Songs', value: generateSongList(tracks)},
+                {name: 'Total duration', value: getSongListDuration(tracks)}
             )
             .setTimestamp();
 
-        botReply({ embeds: [Embed] }, queue.metadata.messageChannel, queue.metadata.interaction);
+        botReply({embeds: [Embed]}, queue.metadata.messageChannel, queue.metadata.interaction);
     });
 }
 
@@ -90,7 +85,7 @@ async function addErrorListeners(player) {
             .setDescription(`An error occurred: \`${error.message}\``)
             .setTimestamp();
 
-        botReply({ embeds: [Embed] }, queue?.metadata?.messageChannel, queue?.metadata?.interaction);
+        botReply({embeds: [Embed]}, queue?.metadata?.messageChannel, queue?.metadata?.interaction);
     });
 
     player.events.on('error', (queue, error) => {
@@ -100,7 +95,7 @@ async function addErrorListeners(player) {
             .setDescription(`An error occurred: \`${error.message}\``)
             .setTimestamp();
 
-        botReply({ embeds: [Embed] }, queue?.metadata?.messageChannel, queue?.metadata?.interaction);
+        botReply({embeds: [Embed]}, queue?.metadata?.messageChannel, queue?.metadata?.interaction);
     });
 }
 
